@@ -1,1 +1,1 @@
-# StockAnalytics
+# Bulleye - Your Stock Market Companion
