@@ -1,0 +1,173 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #2e2e2e; /* Dark Slate Background */
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    text-align: center; /* Centering text */
+}
+
+/* Navigation */
+nav {
+    background-color: #333; /* Dark background for nav */
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-around; /* Space out the navigation links */
+    align-items: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000; /* Keep nav above other elements */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add subtle shadow */
+}
+
+nav a {
+    color: #007bff; /* Standard Blue */
+    text-decoration: none;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+nav a i {
+    font-size: 20px; /* Adjust icon size */
+    margin-right: 8px; /* Spacing between icon and text */
+}
+
+nav a:hover {
+    color: #00aaff; /* Brighter blue on hover */
+}
+
+/* Remove bullet points and center navigation links */
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 15px;
+}
+
+/* Custom colors for specific icons */
+nav a.home-icon i {
+    color: #00ff00; /* Green for Home icon */
+}
+
+nav a.portfolio-icon i {
+    color: #ff0000; /* Red for Portfolio icon */
+}
+
+/* Header Styles */
+h1 {
+    color: #007bff; /* Standard Blue */
+    margin-top: 80px; /* Avoid overlap with fixed nav */
+    font-size: 32px;
+}
+
+/* Ensure content starts below the fixed nav */
+body {
+    padding-top: 60px;
+}
+
+/* Container Styles */
+.container {
+    padding: 20px;
+    margin-top: 40px; /* Adjust space for a cleaner layout */
+}
+
+/* Button Styles */
+button {
+    background-color: #007bff; /* Standard Blue */
+    color: #2e2e2e; /* Dark Slate Background */
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #0056b3; /* Slightly darker blue */
+}
+
+/* Input Fields */
+input[type="text"], input[type="password"] {
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #007bff; /* Standard Blue */
+    background-color: #333; /* Dark Slate Background */
+    color: #ffffff;
+    border-radius: 5px;
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+    border-color: #0056b3; /* Slightly darker blue */
+}
+
+/* Chart Container */
+#chart-container {
+    width: 100%;
+    height: 400px;
+    margin: 20px 0;
+}
+
+/* Forecast Container */
+#forecast-container {
+    margin: 20px 0;
+}
+
+/* News Container */
+#news-container {
+    margin: 20px 0;
+}
+
+.news-item {
+    background-color: #333; /* Dark Slate Background */
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.news-item img {
+    max-width: 100px;
+    height: auto;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Trending Stocks */
+#trending-stocks-container ul {
+    list-style: none;
+    padding: 0;
+}
+
+#trending-stocks-container li {
+    padding: 10px;
+    border-bottom: 1px solid #444;
+    font-size: 18px;
+}
+
+#trending-stocks-container .up {
+    color: #00ff00; /* Green for positive change */
+}
+
+#trending-stocks-container .down {
+    color: #ff0000; /* Red for negative change */
+}
+
+/* Landing Page */
+.landing-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full viewport height */
+}
+
+.landing-page img {
+    max-width: 100%;
+    height: auto;
+    border: 2px solid #007bff; /* Standard Blue border around the GIF */
+    border-radius: 10px;
+}

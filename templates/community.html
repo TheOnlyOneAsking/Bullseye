@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='images/bullseye.png') }}" type="image/png+xml">
+    <title>Community : Bullseye - Your Stock Market Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="static/styles.css">
+    <style>
+        body, html {
+    font-family: Arial, sans-serif;
+    background-color: #2e2e2e;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.post-form {
+    background-color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 20px;
+}
+
+.post-form textarea,
+.post-form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+    background-color: #444;
+    color: #ffffff;
+}
+
+.submit-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+.post {
+    background-color: #444;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.post:hover {
+    transform: scale(1.02);
+}
+
+.post h4 {
+    margin-top: 0;
+    color: #007bff;
+}
+
+.post img {
+    max-width: 100%;
+    border-radius: 5px;
+}
+
+.comments {
+    margin-top: 10px;
+    background-color: #555;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.comment {
+    margin: 5px 0;
+    padding: 5px;
+    background-color: #666;
+    border-radius: 5px;
+}
+
+.comment-form {
+    margin-top: 10px;
+}
+
+.comment-form input[type="text"] {
+    width: 80%;
+    padding: 5px;
+    margin-right: 10px;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+}
+
+.comment-form button {
+    background-color: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.comment-form button:hover {
+    background-color: #0056b3;
+}
+
+.like-button {
+    color: #ffcc00;
+    cursor: pointer;
+}
+
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/"><i class="fas fa-home"></i></a></li>
+            <li><a href="/watchlist"><i class="fas fa-list"></i></a></li>
+            <li><a href="/community"><i class="fas fa-comments"></i></a></li>
+            {% if 'user' in session %}
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i></a></li>
+            {% else %}
+                <li><a href="/login"><i class="fas fa-sign-in-alt"></i></a></li>
+                <li><a href="/signup"><i class="fas fa-user-plus"></i></a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <div class="container">
+        <h1>Community Posts</h1>
+
+        {% if 'user' in session %}
+        <div class="post-form">
+            <h3>Share Your Predictions</h3>
+            <form action="/post" method="POST" enctype="multipart/form-data">
+                <input type="text" name="ticker" placeholder="Enter Stock Ticker" required>
+                <textarea name="prediction" placeholder="Your predictions here..." required></textarea>
+                <input type="file" name="file">
+                <button type="submit" class="submit-button">Post</button>
+            </form>
+        </div>
+        {% else %}
+        <p>Please log in to make a post.</p>
+        {% endif %}
+
+        <div id="posts-container">
+            {% for post in posts %}
+            <div class="post" id="post-{{ loop.index }}">
+<h4>{{ post.ticker }} <span class="like-button" onclick="likePost({ loopindex })">❤️ {{ post.likes }}</span></h4>
+                <p>{{ post.prediction }}</p>
+                {% if post.file %}
+                <img src="{{ url_for('static', filename=post.file) }}" alt="Attached Image">
+                {% endif %}
+                <p><small>Posted by: {{ post.username }} <a href="/delete_post/{{ loop.index }}" style="color: red;">Delete</a></small></p>
+
+                <div class="comments">
+                    <h5>Comments</h5>
+                    {% for comment in post.comments %}
+                    <p><strong>{{ comment.username }}:</strong> {{ comment.text }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="comment-form">
+                    <form action="/comment/{{ loop.index }}" method="POST">
+                        <input type="text" name="comment" placeholder="Add a comment..." required>
+                        <button type="submit" class="submit-button">Comment</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        function likePost(postIndex) {
+            fetch(`/like_post/${postIndex}`, { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        document.querySelector(`#post-${postIndex} .like-button`).innerText = `❤️ ${parseInt(document.querySelector(`#post-${postIndex} .like-button`).innerText.split(' ')[1]) + 1}`;
+                    }
+                })
+                .catch(error => console.error('Error liking post:', error));
+        }
+        
+    </script>
+</body>
+</html>

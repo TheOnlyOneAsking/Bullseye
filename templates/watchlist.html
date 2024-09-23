@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='images/bullseye.png') }}" type="image/png+xml">
+    <title>Watchlist : Bullseye - Your Stock Market Companion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2c2c2c;
+            color: #00AAFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        .portfolio-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+            margin-top: 60px;
+        }
+
+        .portfolio-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .portfolio-form input,
+        .portfolio-form button {
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .portfolio-form input {
+            border: 1px solid #007bff;
+            background-color: #333;
+            color: #ffffff;
+        }
+
+        .portfolio-form button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .portfolio-form button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Watchlist Table */
+        .watchlist-table {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            border-collapse: collapse;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .watchlist-table th, .watchlist-table td {
+            border: 1px solid #007bff;
+            padding: 10px;
+            text-align: center;
+            color: #ffffff;
+            transition: background-color 0.3s;
+        }
+
+        .watchlist-table th {
+            background-color: #007bff;
+        }
+
+        .watchlist-table td {
+            background-color: #444;
+        }
+
+        .watchlist-table tr:hover {
+            background-color: #1abc9c;
+            color: #34495e;
+        }
+
+        h1 {
+            text-align: center;
+            color: #3498db;
+        }
+
+        h2 {
+            text-align: center;
+            color: #ecf0f1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/"><i class="fas fa-home"></i></a></li>
+            <li><a href="/watchlist"><i class="fas fa-list"></i></a></li>
+            <li><a href="/community"><i class="fas fa-comments"></i></a></li>            {% if 'user' in session %}
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i></a></li>
+            {% else %}
+                <li><a href="/login"><i class="fas fa-sign-in-alt"></i></a></li>
+                <li><a href="/signup"><i class="fas fa-user-plus"></i></a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <div class="portfolio-container">
+        <h1>Watchlist</h1>
+        <form id="watchlist-form" class="portfolio-form">
+            <input type="text" id="ticker" placeholder="Enter stock ticker" required>
+            <button type="submit">Add to Watchlist</button>
+        </form>
+        
+        <!-- Watchlist Table -->
+        <h2>Your Watchlist</h2>
+        <table id="watchlist-table" class="watchlist-table">
+            <thead>
+                <tr>
+                    <th>Ticker</th>
+                    <th>Current Price</th>
+                    <th>Price Change</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stock in watchlist %}
+                <tr>
+                    <td>{{ stock.ticker }}</td>
+                    <td>${{ stock.current_price.toFixed(2) }}</td>
+                    <td class="{{ 'text-success' if stock.price_change >= 0 else 'text-danger' }}">
+                        {{ stock.price_change }}
+                    </td>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('watchlist-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const ticker = document.getElementById('ticker').value;
+
+                if (!ticker) {
+                    alert('Please provide a valid ticker.');
+                    return;
+                }
+
+                fetch('/add_to_watchlist', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ticker })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update the watchlist table dynamically
+                        const watchlistTableBody = document.getElementById('watchlist-table').getElementsByTagName('tbody')[0];
+                        watchlistTableBody.innerHTML += `
+                            <tr>
+                                <td>${data.stock.ticker}</td>
+                                <td>$${data.stock.current_price.toFixed(2)}</td>
+                                <td class="${data.stock.price_change >= 0 ? 'text-success' : 'text-danger'}">
+                                    ${data.stock.price_change >= 0 ? '+' : ''}$${data.stock.price_change.toFixed(2)}
+                                </td>
+                            </tr>
+                        `;
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

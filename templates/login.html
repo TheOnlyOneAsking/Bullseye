@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='images/bullseye.png') }}" type="image/png+xml">    <title>Login : Bullseye - Your Stock Market Companion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+     <!-- Navigation Bar with Icons -->
+     <nav>
+        <ul>
+            <li><a href="/"><i class="fas fa-home"></i></a></li>
+            <li><a href="/watchlist"><i class="fas fa-list"></i></a></li>
+            <li><a href="/community"><i class="fas fa-comments"></i></a></li>
+            {% if 'user' in session %}
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i></a></li>
+            {% else %}
+                <li><a href="/login"><i class="fas fa-sign-in-alt"></i></a></li>
+                <li><a href="/signup"><i class="fas fa-user-plus"></i></a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <div class="container">
+        <h1>Login</h1>
+        <form method="POST" action="/login">
+            <input type="text" name="username" placeholder="Username">
+            <input type="password" name="password" placeholder="Password">
+            <button type="submit">Login</button>
+        </form>
+        
+        </form>
+    </div>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      window.location.href = '/';
+                  } else {
+                      alert('Invalid credentials');
+                  }
+              });
+        });
+    </script>
+</body>
+</html>

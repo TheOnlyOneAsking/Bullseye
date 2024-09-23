@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='images/bullseye.png') }}" type="image/png+xml">
+    <title>Bullseye - Your Stock Market Companion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Animation and transition styles */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .animated {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .slide-up {
+            animation: slideIn 1s ease-out;
+        }
+
+        .scroll-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .scroll-button.show {
+            opacity: 1;
+        }
+
+        .scroll-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Center chart */
+        #chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        /* Financial Details Container */
+        #financial-details-container {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .financial-detail-item {
+            background-color: #333;
+            color: #ffffff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+
+        .financial-detail-item:hover {
+            transform: scale(1.02);
+        }
+
+        .financial-detail-item h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .financial-detail-item span {
+            font-size: 18px;
+            color: #007bff;
+        }
+
+       
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar with Icons -->
+    <nav>
+        <ul>
+            <li><a href="/"><i class="fas fa-home"></i></a></li>
+            <li><a href="/watchlist"><i class="fas fa-list"></i></a></li>
+            <li><a href="/community"><i class="fas fa-comments"></i></a></li>            {% if 'user' in session %}
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i></a></li>
+            {% else %}
+                <li><a href="/login"><i class="fas fa-sign-in-alt"></i></a></li>
+                <li><a href="/signup"><i class="fas fa-user-plus"></i></a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <!-- Landing Page Section -->
+    <div class="landing-page animated" id="landing-page">
+        <img id="gif" src="{{ url_for('static', filename='images/daily-meme.gif') }}" alt="Stock Chart GIF">
+    </div>
+
+    <!-- Analytics Page Section -->
+    <div class="container slide-up">
+        <h1>Stock Analysis</h1>
+        <form id="analyze-form">
+            <input type="text" id="ticker" placeholder="Enter stock ticker" required>
+            <button type="submit">Analyze</button>
+        </form>
+        <div id="chart-container">
+            <canvas id="stockChart" width="400" height="200"></canvas>
+        </div>
+
+        <!-- Financial Details Section -->
+        <div id="financial-details-container"></div>
+
+        
+    </div>
+
+    <!-- Scroll Button -->
+    <button id="scroll-button" class="scroll-button hidden">Go to Analysis</button>
+
+    <!-- Script Section -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const scrollButton = document.getElementById('scroll-button');
+            const container = document.querySelector('.container');
+            const landingPage = document.getElementById('landing-page');
+
+            scrollButton.addEventListener('click', () => {
+                container.scrollIntoView({ behavior: 'smooth' });
+                scrollButton.classList.add('hidden');
+                landingPage.classList.add('hidden');
+            });
+
+            let currentChartType = 'line'; // Set initial chart type
+
+            document.getElementById('analyze-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const ticker = document.getElementById('ticker').value;
+
+                fetch('/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ticker })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    renderFinancialDetails(data.data);  // Render financial details
+                    renderChart(data.data, currentChartType);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+            });
+
+                if (ticker) {
+                    fetch('/analyze', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ ticker })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        renderChart(data.data, currentChartType);
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+                }
+            });
+
+            function renderChart(data, chartType) {
+                const ctx = document.getElementById('stockChart').getContext('2d');
+                const labels = data.map(d => d.Date);
+                const prices = data.map(d => d.Close);
+
+                if (window.stockChart) {
+                    window.stockChart.destroy();
+                }
+
+                window.stockChart = new Chart(ctx, {
+                    type: chartType,
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Stock Price',
+                            data: prices,
+                            borderColor: 'rgba(0, 123, 255, 1)',
+                            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: { beginAtZero: true },
+                            y: { beginAtZero: true }
+                        },
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+
+            function renderFinancialDetails(data) {
+                const financialDetailsContainer = document.getElementById('financial-details-container');
+                financialDetailsContainer.innerHTML = `
+                    <h2>Financial Overview</h2>
+                    <div class="financial-detail-item"><h3>52 Week High</h3><span>${data['52_week_high']}</span></div>
+                    <div class="financial-detail-item"><h3>52 Week Low</h3><span>${data['52_week_low']}</span></div>
+                    <div class="financial-detail-item"><h3>50 Day SMA</h3><span>${data['SMA']}</span></div>
+                    <div class="financial-detail-item"><h3>EPS</h3><span>${data['EPS']}</span></div>
+                    <div class="financial-detail-item"><h3>PE Ratio</h3><span>${data['PE_ratio']}</span></div>
+                    <div class="financial-detail-item"><h3>Market Cap</h3><span>${data['market_cap']}</span></div>
+                    <div class="financial-detail-item"><h3>Dividend Yield</h3><span>${data['dividend_yield']}</span></div>
+                    <div class="financial-detail-item"><h3>Beta</h3><span>${data['beta']}</span></div>
+                    <div class="financial-detail-item"><h3>Company Summary</h3><p>${data['company_summary']}</p></div>
+                `;
+            }
+    </script>
+</body>
+</html>
