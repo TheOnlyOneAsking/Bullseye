@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='images/bullseye.png') }}" type="image/png+xml">    <title>Logout : Bullseye - Your Stock Market Companion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/"><i class="fas fa-home"></i></a></li>
+            <li><a href="/watchlist"><i class="fas fa-list"></i></a></li>
+            <li><a href="/community"><i class="fas fa-comments"></i></a></li>
+            {% if 'user' in session %}
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i></a></li>
+            {% else %}
+                <li><a href="/login"><i class="fas fa-sign-in-alt"></i></a></li>
+                <li><a href="/signup"><i class="fas fa-user-plus"></i></a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>Logout Successful</h1>
+        <p>You have been logged out. Thank you for using our service.</p>
+    </div>
+</body>
+</html>
