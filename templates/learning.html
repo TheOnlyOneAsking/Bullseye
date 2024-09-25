@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Market Learning Journey</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: #007bff;
+            color: white;
+        }
+
+        .hero-section h1 {
+            margin-bottom: 20px;
+        }
+
+        .start-button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .start-button:hover {
+            background-color: #003d80;
+        }
+
+        .article-section {
+            display: none;
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-section.active {
+            display: block;
+        }
+
+        .article-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .article-content {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .next-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .next-button:hover {
+            background-color: #0056b3;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: space-around;
+            background-color: #333;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        nav ul li a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            background-color: #575757;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#start">Start Learning</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+</nav>
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <h1>Welcome to Your Stock Market Journey</h1>
+    <p>Learn the basics of stock investing and master the market with our guided articles!</p>
+    <button class="start-button" id="start-button">Start Your Stock Market Journey</button>
+</div>
+
+<!-- Articles Section -->
+<div class="container">
+    <div class="article-section" id="article-1">
+        <h2 class="article-title">Understanding Stock Valuation</h2>
+        <p class="article-content">Valuing stocks involves assessing a company's fundamentals to determine if the stock is overvalued or undervalued.</p>
+        <button class="next-button" onclick="showNext(2)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-2">
+        <h2 class="article-title">Fundamental Analysis</h2>
+        <p class="article-content">Fundamental analysis focuses on a company's financial health to assess its stock value. Key metrics include P/E ratio, EPS, and revenue growth.</p>
+        <button class="next-button" onclick="showNext(3)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-3">
+        <h2 class="article-title">Technical Analysis Basics</h2>
+        <p class="article-content">Technical analysis uses historical price data and chart patterns to forecast future stock price movements.</p>
+        <button class="next-button" onclick="showNext(4)">Next</button>
+    </div>
+
+    <!-- Add more articles in sequence here following the same structure -->
+    
+</div>
+
+<!-- Script to control article navigation -->
+<script>
+    document.getElementById('start-button').addEventListener('click', function() {
+        showNext(1);
+    });
+
+    function showNext(articleNumber) {
+        const allArticles = document.querySelectorAll('.article-section');
+        allArticles.forEach(article => {
+            article.classList.remove('active');
+        });
+        document.getElementById('article-' + articleNumber).classList.add('active');
+    }
+</script>
+
+</body>
+</html>
