@@ -5,12 +5,10 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.ensemble import RandomForestRegressor
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import requests
-from werkzeug.exceptions import BadRequestKeyError
-import random
-from datetime import datetime
-import pytz
 import logging
 import os
+from datetime import datetime
+import pytz
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -22,6 +20,8 @@ users = {'testuser': 'testpass'}
 watchlists = {}  # This should hold lists for each user
 posts = []
 
+# Finnhub API Key
+FINNHUB_API_KEY = 'crso609r01qpjadukir0crso609r01qpjadukirg'
 
 # Helper function to check if the stock market is open
 def is_market_open():
@@ -30,26 +30,19 @@ def is_market_open():
     end = now.replace(hour=16, minute=0, second=0, microsecond=0)
     return start <= now <= end and now.weekday() < 5  # Weekdays only
 
-# Function to get the latest stock price using Alpha Vantage API
+# Function to get the latest stock price using Finnhub API
 def get_stock_price(ticker):
-    API_KEY = '9ZJKYHO08N45XEVF'  # Use a valid API key
-    url = f'https://www.alphavantage.co/query'
+    url = f'https://finnhub.io/api/v1/quote'
     params = {
-        'function': 'TIME_SERIES_INTRADAY',
         'symbol': ticker,
-        'interval': '30min',
-        'apikey': API_KEY
+        'token': FINNHUB_API_KEY
     }
     try:
         response = requests.get(url, params=params)
         response.raise_for_status()
         data = response.json()
         logging.debug(f"Stock price API response: {data}")
-        time_series = data.get('Time Series (30min)', {})
-        if time_series:
-            latest_time = sorted(time_series.keys())[-1]
-            latest_data = time_series[latest_time]
-            return float(latest_data['1. open']), float(latest_data['4. close'])  # Open and close price
+        return float(data['o']), float(data['c'])  # Open and close price
     except requests.RequestException as e:
         logging.error(f"Request error: {e}")
     return None, None
@@ -59,8 +52,6 @@ def get_stock_price(ticker):
 def page_not_found(e):
     return render_template('404.html'), 404
 
-
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -68,7 +59,6 @@ def index():
 @app.route('/learning')
 def learning():
     return render_template('learning.html')
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -114,8 +104,7 @@ def watchlist():
 
     return render_template('watchlist.html', watchlist=watchlist_data)
 
-
-@app.route('/add_to_watchlist', methods=['POST'])  # Endpoint for adding stocks to the watchlist
+@app.route('/add_to_watchlist', methods=['POST'])
 def add_to_watchlist():
     if 'user' not in session:
         return jsonify({'success': False, 'message': 'User not logged in'}), 401  # Check for authentication
@@ -208,32 +197,33 @@ def analyze_stock():
     # Get ticker from the request
     ticker = request.json.get('ticker')
     
-    # Alpha Vantage API key
-    API_KEY = '9ZJKYHO08N45XEVF'
+    # Finnhub API URL for company profile and metrics
+    overview_url = f'https://finnhub.io/api/v1/stock/metric?symbol={ticker}&metric=all&token={FINNHUB_API_KEY}'
+    
+    try:
+        response = requests.get(overview_url)
+        stock_info = response.json()
 
-    # Fetch company overview
-    overview_url = f'https://www.alphavantage.co/query?function=OVERVIEW&symbol={ticker}&apikey={API_KEY}'
-    response = requests.get(overview_url)
-    stock_info = response.json()
+        if 'metric' not in stock_info:
+            return jsonify({'success': False, 'message': 'Invalid ticker symbol'}), 400
 
-    if 'Error Message' in stock_info:
-        return jsonify({'success': False, 'message': 'Invalid ticker symbol'}), 400
+        # Extract relevant information
+        analysis_data = {
+            '52_week_high': stock_info['metric'].get('52WeekHigh', 'N/A'),
+            '52_week_low': stock_info['metric'].get('52WeekLow', 'N/A'),
+            'SMA': stock_info['metric'].get('50DayMA', 'N/A'),
+            'EPS': stock_info['metric'].get('epsBasicExclExtraItemsTTM', 'N/A'),
+            'PE_ratio': stock_info['metric'].get('peInclExtraTTM', 'N/A'),
+            'market_cap': stock_info['metric'].get('marketCapitalization', 'N/A'),
+            'dividend_yield': stock_info['metric'].get('dividendYieldIndicatedAnnual', 'N/A'),
+            'beta': stock_info['metric'].get('beta', 'N/A'),
+            'summary': stock_info.get('companyProfile', {}).get('description', 'N/A')
+        }
 
-    # Extract relevant information
-    analysis_data = {
-        '52_week_high': stock_info.get('52WeekHigh', 'N/A'),
-        '52_week_low': stock_info.get('52WeekLow', 'N/A'),
-        'SMA': stock_info.get('50DayMovingAverage', 'N/A'),
-        'EPS': stock_info.get('EPS', 'N/A'),
-        'PE_ratio': stock_info.get('PERatio', 'N/A'),
-        'market_cap': stock_info.get('MarketCapitalization', 'N/A'),
-        'dividend_yield': stock_info.get('DividendYield', 'N/A'),
-        'beta': stock_info.get('Beta', 'N/A'),
-        'summary': stock_info.get('Description', 'N/A')
-    }
-
-    return jsonify({'success': True, 'data': analysis_data}), 200
-
+        return jsonify({'success': True, 'data': analysis_data}), 200
+    except requests.RequestException as e:
+        logging.error(f"Error fetching stock data: {e}")
+        return jsonify({'success': False, 'message': 'Error fetching stock data'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

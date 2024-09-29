@@ -168,6 +168,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
+                        location.reload();
                         // Update the watchlist table dynamically
                         const watchlistTableBody = document.getElementById('watchlist-table').getElementsByTagName('tbody')[0];
                         watchlistTableBody.innerHTML += `

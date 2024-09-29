@@ -96,8 +96,6 @@
             font-size: 18px;
             color: #007bff;
         }
-
-       
     </style>
 </head>
 <body>
@@ -107,7 +105,8 @@
             <li><a href="/"><i class="fas fa-home"></i></a></li>
             <li><a href="/watchlist"><i class="fas fa-list"></i></a></li>
             <li><a href="/learning"><i class="fas fa-book"></i></a></li>
-            <li><a href="/community"><i class="fas fa-comments"></i></a></li>            {% if 'user' in session %}
+            <li><a href="/community"><i class="fas fa-comments"></i></a></li>
+            {% if 'user' in session %}
                 <li><a href="/logout"><i class="fas fa-sign-out-alt"></i></a></li>
             {% else %}
                 <li><a href="/login"><i class="fas fa-sign-in-alt"></i></a></li>
@@ -129,13 +128,12 @@
             <button type="submit">Analyze</button>
         </form>
         <div id="chart-container">
-            <canvas id="stockChart" width="400" height="200"></canvas>
+            <canvas id="stockChart" width="700" height="350"></canvas>
         </div>
+        
 
         <!-- Financial Details Section -->
         <div id="financial-details-container"></div>
-
-        
     </div>
 
     <!-- Scroll Button -->
@@ -143,13 +141,13 @@
 
     <!-- Script Section -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const scrollButton = document.getElementById('scroll-button');
             const container = document.querySelector('.container');
             const landingPage = document.getElementById('landing-page');
 
+            // Smooth scroll to the container and hide the scroll button and landing page
             scrollButton.addEventListener('click', () => {
                 container.scrollIntoView({ behavior: 'smooth' });
                 scrollButton.classList.add('hidden');
@@ -158,10 +156,17 @@
 
             let currentChartType = 'line'; // Set initial chart type
 
+            // Form submit event listener
             document.getElementById('analyze-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                const ticker = document.getElementById('ticker').value;
+                e.preventDefault();  // Prevent default form submission
+                const ticker = document.getElementById('ticker').value;  // Fetch ticker value
 
+                if (!ticker) {  // Ensure ticker is provided
+                    console.error('Please enter a ticker symbol.');
+                    return;
+                }
+
+                // Fetch stock analysis data
                 fetch('/analyze', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -169,37 +174,29 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    renderFinancialDetails(data.data);  // Render financial details
-                    renderChart(data.data, currentChartType);
+                    if (data && data.data) {
+                        renderFinancialDetails(data.data);  // Render financial details if available
+                        renderChart(data.data, currentChartType);  // Render chart with the fetched data
+                    } else {
+                        console.error('No data returned for the provided ticker.');
+                    }
                 })
                 .catch(error => console.error('Error fetching data:', error));
             });
 
-                if (ticker) {
-                    fetch('/analyze', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ ticker })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        renderChart(data.data, currentChartType);
-                    })
-                    .catch(error => console.error('Error fetching data:', error));
-                }
-            });
-
-                        function renderChart(data, chartType) {
+            // Render chart function
+            function renderChart(data, chartType) {
                 if (!data || data.length === 0) {
                     console.error('No data available for chart.');
                     return;
                 }
 
                 const ctx = document.getElementById('stockChart').getContext('2d');
-                const labels = data.map(d => d.Date);
-                const prices = data.map(d => d.Close);
+                const labels = data.map(d => d.Date);  // Map dates for x-axis
+                const prices = data.map(d => d.Close);  // Map closing prices for y-axis
 
-                window.stockChart = new Chart(ctx, {
+                // Create new chart
+                new Chart(ctx, {
                     type: chartType,
                     data: {
                         labels: labels,
@@ -222,7 +219,7 @@
                 });
             }
 
-
+            // Render financial details function
             function renderFinancialDetails(data) {
                 const financialDetailsContainer = document.getElementById('financial-details-container');
                 financialDetailsContainer.innerHTML = `
@@ -238,6 +235,7 @@
                     <div class="financial-detail-item"><h3>Company Summary</h3><p>${data['company_summary']}</p></div>
                 `;
             }
+        });
     </script>
 </body>
 </html>
