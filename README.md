@@ -37,7 +37,7 @@ The community page provides a platform for users to engage in discussions, share
 
 #### Clone the Repository:
 ```
-git clone https://github.com/theonlyoneasking/bullseye.git
+git clone https://github.com/theonlyoneasking/bullseye
 cd bullseye
 ```
 #### Set Up a Virtual Environment:
