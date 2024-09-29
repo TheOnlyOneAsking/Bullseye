@@ -48,9 +48,9 @@ venv\Scripts\activate     # Windows
 ```
 #### Install Packages:
 ```
-pip install Flask Flask-SQLAlchemy Werkzeug
+pip install -requirements.txt
 ```
-(Installs Flask web framework, SQLAlchemy for database management, and Werkzeug for secure password hashing)
+(Installs all the packages needed to run the application)
 
 #### Run the Application:
 ```
@@ -84,6 +84,7 @@ def get_stock_data(symbol):
     - `login.html`: The login page for existing users to access their accounts.
     - `watchlist.html`: Allows users to view and manage their watchlist of stocks.
     - `community.html`: A page for user engagement and discussion about stock trading.
+    - `learning.html` : A page where you can learn about stock trading.
 
 - **static/**: 
   - This directory contains all static assets, including CSS files for styling, and images used throughout the application. Key files include:
