@@ -106,6 +106,7 @@
         <ul>
             <li><a href="/"><i class="fas fa-home"></i></a></li>
             <li><a href="/watchlist"><i class="fas fa-list"></i></a></li>
+            <li><a href="/learning"><i class="fas fa-book"></i></a></li>
             <li><a href="/community"><i class="fas fa-comments"></i></a></li>            {% if 'user' in session %}
                 <li><a href="/logout"><i class="fas fa-sign-out-alt"></i></a></li>
             {% else %}
@@ -188,14 +189,15 @@
                 }
             });
 
-            function renderChart(data, chartType) {
+                        function renderChart(data, chartType) {
+                if (!data || data.length === 0) {
+                    console.error('No data available for chart.');
+                    return;
+                }
+
                 const ctx = document.getElementById('stockChart').getContext('2d');
                 const labels = data.map(d => d.Date);
                 const prices = data.map(d => d.Close);
-
-                if (window.stockChart) {
-                    window.stockChart.destroy();
-                }
 
                 window.stockChart = new Chart(ctx, {
                     type: chartType,
@@ -219,6 +221,7 @@
                     }
                 });
             }
+
 
             function renderFinancialDetails(data) {
                 const financialDetailsContainer = document.getElementById('financial-details-container');

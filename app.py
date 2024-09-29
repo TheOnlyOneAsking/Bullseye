@@ -19,7 +19,7 @@ app.secret_key = 'your_secret_key'  # Use a secure key in production
 
 # Mock user data, portfolios, and simulated trading balance
 users = {'testuser': 'testpass'}
-watchlists = {}
+watchlists = {}  # This should hold lists for each user
 posts = []
 
 
@@ -64,6 +64,11 @@ def page_not_found(e):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/learning')
+def learning():
+    return render_template('learning.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -110,7 +115,6 @@ def watchlist():
     return render_template('watchlist.html', watchlist=watchlist_data)
 
 
-# Modify the add_to_watchlist function
 @app.route('/add_to_watchlist', methods=['POST'])  # Endpoint for adding stocks to the watchlist
 def add_to_watchlist():
     if 'user' not in session:
@@ -121,10 +125,10 @@ def add_to_watchlist():
 
     user = session['user']
     if user not in watchlists:
-        watchlists[user] = {}  # Initialize the user's watchlist if it doesn't exist
+        watchlists[user] = []  # Initialize the user's watchlist as a list
 
     # Check if the ticker is already in the watchlist
-    if ticker in [stock['ticker'] for stock in watchlists[user]]:
+    if any(stock['ticker'] == ticker for stock in watchlists[user]):
         return jsonify({'success': False, 'message': 'Ticker already in watchlist.'})
 
     # Fetch the current price and price change
@@ -136,7 +140,7 @@ def add_to_watchlist():
     watchlists[user].append({
         'ticker': ticker,
         'current_price': current_price,
-        'price_change': price_change  # Update with actual price change
+        'price_change': price_change  # You can modify how price change is calculated
     })
 
     return jsonify({'success': True, 'ticker': ticker, 'current_price': current_price})  # Return success response
@@ -227,9 +231,7 @@ def analyze_stock():
         'beta': stock_info.get('Beta', 'N/A'),
         'summary': stock_info.get('Description', 'N/A')
     }
-    
 
-    # Return the analysis data as JSON response
     return jsonify({'success': True, 'data': analysis_data}), 200
 
 

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ url_for('static', filename='images/bullseye.png') }}" type="image/png+xml">
-    <title>Watchlist : Bullseye - Your Stock Market Companion</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/bullseye.png') }}" type="image/png">
+    <title>Watchlist: Bullseye - Your Stock Market Companion</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -107,7 +107,9 @@
         <ul>
             <li><a href="/"><i class="fas fa-home"></i></a></li>
             <li><a href="/watchlist"><i class="fas fa-list"></i></a></li>
-            <li><a href="/community"><i class="fas fa-comments"></i></a></li>            {% if 'user' in session %}
+            <li><a href="/learning"><i class="fas fa-book"></i></a></li>
+            <li><a href="/community"><i class="fas fa-comments"></i></a></li>
+            {% if 'user' in session %}
                 <li><a href="/logout"><i class="fas fa-sign-out-alt"></i></a></li>
             {% else %}
                 <li><a href="/login"><i class="fas fa-sign-in-alt"></i></a></li>
@@ -120,7 +122,7 @@
         <h1>Watchlist</h1>
         <form id="watchlist-form" class="portfolio-form">
             <input type="text" id="ticker" placeholder="Enter stock ticker" required>
-            <button type="submit">Add to Watchlist</button>
+            <button type="submit" >Add to Watchlist</button>
         </form>
         
         <!-- Watchlist Table -->
@@ -137,10 +139,9 @@
                 {% for stock in watchlist %}
                 <tr>
                     <td>{{ stock.ticker }}</td>
-                    <td>${{ stock.current_price.toFixed(2) }}</td>
+                    <td>${{ stock.current_price | round(2) }}</td>
                     <td class="{{ 'text-success' if stock.price_change >= 0 else 'text-danger' }}">
-                        {{ stock.price_change }}
-                    </td>
+                        {{ stock.price_change | round(2) }}
                     </td>
                 </tr>
                 {% endfor %}
@@ -152,7 +153,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('watchlist-form').addEventListener('submit', function(e) {
                 e.preventDefault();
-                const ticker = document.getElementById('ticker').value;
+                const ticker = document.getElementById('ticker').value.trim();
 
                 if (!ticker) {
                     alert('Please provide a valid ticker.');

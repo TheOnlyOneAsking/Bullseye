@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Market Learning Journey</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -105,15 +107,39 @@
             background-color: #575757;
         }
     </style>
+=======
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+>>>>>>> Stashed changes
+=======
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+>>>>>>> Stashed changes
 </head>
 <body>
 
 <!-- Navigation Bar -->
 <nav>
     <ul>
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         <li><a href="/">Home</a></li>
         <li><a href="#start">Start Learning</a></li>
         <li><a href="#contact">Contact</a></li>
+=======
+=======
+>>>>>>> Stashed changes
+        <li><a href="/"><i class="fas fa-home"></i></a></li>
+        <li><a href="/watchlist"><i class="fas fa-list"></i></a></li>
+        <li><a href="/learning"><i class="fas fa-book"></i></a></li>
+        <li><a href="/community"><i class="fas fa-comments"></i></a></li>            {% if 'user' in session %}
+            <li><a href="/logout"><i class="fas fa-sign-out-alt"></i></a></li>
+        {% else %}
+            <li><a href="/login"><i class="fas fa-sign-in-alt"></i></a></li>
+            <li><a href="/signup"><i class="fas fa-user-plus"></i></a></li>
+        {% endif %}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
     </ul>
 </nav>
 
@@ -126,6 +152,16 @@
 
 <!-- Articles Section -->
 <div class="container">
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+    <!-- Articles Section -->
+<div class="container">
+>>>>>>> Stashed changes
+=======
+    <!-- Articles Section -->
+<div class="container">
+>>>>>>> Stashed changes
     <div class="article-section" id="article-1">
         <h2 class="article-title">Understanding Stock Valuation</h2>
         <p class="article-content">Valuing stocks involves assessing a company's fundamentals to determine if the stock is overvalued or undervalued.</p>
@@ -144,8 +180,143 @@
         <button class="next-button" onclick="showNext(4)">Next</button>
     </div>
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
     <!-- Add more articles in sequence here following the same structure -->
-    
+=======
+=======
+>>>>>>> Stashed changes
+    <div class="article-section" id="article-4">
+        <h2 class="article-title">The Role of Dividends in Stock Investing</h2>
+        <p class="article-content">Dividends provide a steady income stream from stocks. Learn how dividends work and why they are important for long-term investors.</p>
+        <button class="next-button" onclick="showNext(5)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-5">
+        <h2 class="article-title">Stock Market Indices Explained</h2>
+        <p class="article-content">Stock market indices, like the S&P 500, help track the performance of a group of stocks. Learn how they are calculated and what they represent.</p>
+        <button class="next-button" onclick="showNext(6)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-6">
+        <h2 class="article-title">Growth Stocks vs. Value Stocks</h2>
+        <p class="article-content">Understand the difference between growth stocks and value stocks, and learn which might suit your investing style.</p>
+        <button class="next-button" onclick="showNext(7)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-7">
+        <h2 class="article-title">How to Create a Stock Portfolio</h2>
+        <p class="article-content">Building a stock portfolio is key to investment success. Learn how to diversify and balance your investments.</p>
+        <button class="next-button" onclick="showNext(8)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-8">
+        <h2 class="article-title">Risk Management in Stock Investing</h2>
+        <p class="article-content">Every investment comes with risk. Learn how to manage risk and protect your investments in volatile markets.</p>
+        <button class="next-button" onclick="showNext(9)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-9">
+        <h2 class="article-title">Market Orders vs. Limit Orders</h2>
+        <p class="article-content">Market and limit orders are basic types of stock orders. Understand the differences and when to use each.</p>
+        <button class="next-button" onclick="showNext(10)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-10">
+        <h2 class="article-title">Understanding Stock Splits</h2>
+        <p class="article-content">Stock splits change the number of shares in circulation but not the total value. Learn how they affect investors.</p>
+        <button class="next-button" onclick="showNext(11)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-11">
+        <h2 class="article-title">How to Read Stock Charts</h2>
+        <p class="article-content">Stock charts provide a visual representation of price movements. Learn how to read and interpret them for better decisions.</p>
+        <button class="next-button" onclick="showNext(12)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-12">
+        <h2 class="article-title">Introduction to Stock Market Volatility</h2>
+        <p class="article-content">Stock market volatility refers to price fluctuations. Learn how to navigate volatility to protect and grow your investments.</p>
+        <button class="next-button" onclick="showNext(13)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-13">
+        <h2 class="article-title">What Are ETFs?</h2>
+        <p class="article-content">Exchange-traded funds (ETFs) are baskets of securities that trade on stock exchanges. Learn how they work and why they’re popular.</p>
+        <button class="next-button" onclick="showNext(14)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-14">
+        <h2 class="article-title">The Basics of IPOs</h2>
+        <p class="article-content">Initial public offerings (IPOs) are how companies go public. Learn how to evaluate IPOs and whether they’re worth investing in.</p>
+        <button class="next-button" onclick="showNext(15)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-15">
+        <h2 class="article-title">How Interest Rates Affect Stock Prices</h2>
+        <p class="article-content">Interest rates can significantly impact stock prices. Learn how central bank policies influence market trends.</p>
+        <button class="next-button" onclick="showNext(16)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-16">
+        <h2 class="article-title">Understanding Stock Buybacks</h2>
+        <p class="article-content">Stock buybacks occur when companies purchase their own shares. Learn why they do this and how it affects shareholders.</p>
+        <button class="next-button" onclick="showNext(17)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-17">
+        <h2 class="article-title">Dollar-Cost Averaging Explained</h2>
+        <p class="article-content">Dollar-cost averaging involves consistently investing a fixed amount over time. Learn how it can minimize risks.</p>
+        <button class="next-button" onclick="showNext(18)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-18">
+        <h2 class="article-title">Stock Market Cycles</h2>
+        <p class="article-content">The stock market moves in cycles. Learn about bull and bear markets and how to recognize the signs of each.</p>
+        <button class="next-button" onclick="showNext(19)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-19">
+        <h2 class="article-title">The Impact of Global Events on Stock Markets</h2>
+        <p class="article-content">Global events, such as wars and pandemics, can shake the stock market. Learn how to anticipate and respond to these changes.</p>
+        <button class="next-button" onclick="showNext(20)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-20">
+        <h2 class="article-title">What Is Market Capitalization?</h2>
+        <p class="article-content">Market capitalization represents the total value of a company's shares. Learn how to calculate it and what it means for investors.</p>
+        <button class="next-button" onclick="showNext(21)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-21">
+        <h2 class="article-title">Blue-Chip Stocks: The Pillars of Stability</h2>
+        <p class="article-content">Blue-chip stocks are large, established companies with stable earnings. Learn why they are considered safe investments.</p>
+        <button class="next-button" onclick="showNext(22)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-22">
+        <h2 class="article-title">Stock Market Sectors: An Overview</h2>
+        <p class="article-content">The stock market is divided into various sectors like technology, healthcare, and energy. Learn how sector trends impact stock prices.</p>
+        <button class="next-button" onclick="showNext(23)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-23">
+        <h2 class="article-title">The Role of Liquidity in Stock Markets</h2>
+        <p class="article-content">Liquidity refers to how quickly a stock can be bought or sold without affecting its price. Learn why liquidity matters.</p>
+        <button class="next-button" onclick="showNext(24)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-24">
+        <h2 class="article-title">Behavioral Finance: Understanding Investor Psychology</h2>
+        <p class="article-content">Behavioral finance studies how psychological factors influence investors' decisions. Learn how emotions can drive stock prices.</p>
+        <button class="next-button" onclick="showNext(25)">Next</button>
+    </div>
+
+    <div class="article-section" id="article-25">
+        <h2 class="article-title">Stock Market Bubbles and Crashes</h2>
+        <p class="article-content">Stock market bubbles occur when asset prices soar above their true value. Learn about historical bubbles and crashes and how to identify them.</p>
+        <button class="next-button" onclick="showNext(26)">Next</button>
+    </div>
 </div>
 
 <!-- Script to control article navigation -->
