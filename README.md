@@ -1,5 +1,5 @@
 # Bullseye - Stock Market Companion
-#### Video Demo:  <URL HERE>
+#### Video Demo:  <[URL HERE](https://www.canva.com/design/DAGSWw9Kl3g/r0sZU7QL74R6nq7gGgmqrQ/watch?utm_content=DAGSWw9Kl3g&utm_campaign=share_your_design&utm_medium=link&utm_source=shareyourdesignpanel)>
 
 Bullseye is a sophisticated stock analysis application developed using Python and Flask. It empowers users with essential financial data and metrics for informed investment decisions.
 
